@@ -56,7 +56,7 @@ genres = ['Action','Adult','Adventure''Animation','Biography','Comedy','Crime','
 
 # Streamlit interface
 st.title('OTT Movie Success Predictor 🍿')
-st.write("Predicts the total views a movie will receive on streaming platforms based on various features such as genre, language, main actors/actresses, director, and runtime.")
+st.write("Predicts the **Total Viewing Hours** of the movie on streaming platforms based on various features.")
 
 # Input fields
 genres_selected = st.multiselect('Genre', genres)
@@ -69,16 +69,16 @@ director = st.selectbox('Director', directors, placeholder="Director")
 
 # Select 5 main actors/actresses using separate selectbox components
 actors = load_actors()
-actor_1 = st.selectbox('Actor/Actress 1', actors, key='actor_1')
-actor_2 = st.selectbox('Actor/Actress 2', actors, key='actor_2')
-actor_3 = st.selectbox('Actor/Actress 3', actors, key='actor_3')
-actor_4 = st.selectbox('Actor/Actress 4', actors, key='actor_4')
-actor_5 = st.selectbox('Actor/Actress 5', actors, key='actor_5')
+actor_1 = st.selectbox('Actor 1', actors, key='actor_1')
+actor_2 = st.selectbox('Actor 2', actors, key='actor_2')
+actor_3 = st.selectbox('Actor 3', actors, key='actor_3')
+actor_4 = st.selectbox('Actor 4', actors, key='actor_4')
+actor_5 = st.selectbox('Actor 5', actors, key='actor_5')
 
 runtime = st.number_input('Runtime (in minutes)', min_value=10, max_value=300, step=1)
 
 # Add a predict button
-if st.button('Predict Views'):
+if st.button('Predict Viewing Hours'):
     # Ensure the necessary selections are made
     if len(genres_selected) == 0:
         st.error('Please select at least one genre.')
@@ -136,12 +136,12 @@ if st.button('Predict Views'):
 
         model_2 = load_model_2()
         viewing_hours = model_2.predict(df_scaled)
-        views = viewing_hours[0] // (runtime / 60)
-        st.write(f'Predicted Views: {views}')
+        rounded_viewing_hours = round(viewing_hours[0] / 100000) * 100000
+        st.write(f'Predicted Viewing Hours: {rounded_viewing_hours}')
 
 # Add the detailed note about the prediction
 st.markdown("""
 **Note:**
-The predicted viewing hours are for the first 6 months after its release and are based on data from global streaming platforms like Netflix. The actual viewing hours may vary depending on the number of subscribers of the OTT platform it gets released on and its global reach.
+- The predicted viewing hours are based on data from global streaming platforms like Netflix and are for the first 6 months after release. Actual viewing hours may vary depending on the OTT platform's subscriber base and global reach.
+- Adjusting the runtime may not directly impact the predicted viewing hours, as the machine learning model accounts for complex and indirect relationships among various features.
 """)
-
